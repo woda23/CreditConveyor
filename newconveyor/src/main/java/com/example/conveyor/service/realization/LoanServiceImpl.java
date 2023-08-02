@@ -11,6 +11,7 @@ import com.example.conveyor.service.abstraction.LoanScoringService;
 import com.example.conveyor.service.abstraction.LoanService;
 import com.example.conveyor.wrapper.AmountAndRateInRelationOfBooleanParams;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ import java.util.List;
 /**
  * Сервис подсчета возможных условий и параметров кредита.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoanServiceImpl implements LoanService {
@@ -39,7 +41,6 @@ public class LoanServiceImpl implements LoanService {
     private final LoanPreScoringService loanPreScoringService;
 
     private final LoanScoringService loanScoringService;
-    private static final Logger log = LoggerFactory.getLogger(LoanServiceImpl.class);
     private static long loanOfferId = 0;
 
     /**

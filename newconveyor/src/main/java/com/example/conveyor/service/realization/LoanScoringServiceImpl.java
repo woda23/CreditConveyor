@@ -3,6 +3,7 @@ package com.example.conveyor.service.realization;
 import com.example.conveyor.dto.ScoringDataDTO;
 import com.example.conveyor.service.abstraction.LoanScoringService;
 import com.example.conveyor.wrapper.ScoringResult;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,9 @@ import java.time.LocalDate;
 /**
  * Сервис для проверки заявки на кредит перед ее обработкой.
  */
+@Slf4j
 @Service
 public class LoanScoringServiceImpl implements LoanScoringService {
-    private static final Logger log = LoggerFactory.getLogger(LoanScoringServiceImpl.class);
 
     /**
      * Рассчитывает кредитный рейтинг заемщика на основе предоставленных данных.
@@ -91,7 +92,7 @@ public class LoanScoringServiceImpl implements LoanScoringService {
 
         // Результат
         result.setApproved(true);
-        log.info("Score passed successfully, set approved for request, calculate new rate");
+        log.info("new rate: {}" );
         return result;
     }
 }

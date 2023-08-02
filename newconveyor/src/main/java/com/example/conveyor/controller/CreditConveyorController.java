@@ -1,6 +1,8 @@
 package com.example.conveyor.controller;
 
+import com.example.conveyor.dto.CreditDTO;
 import com.example.conveyor.dto.LoanApplicationRequestDTO;
+import com.example.conveyor.dto.LoanOfferDTO;
 import com.example.conveyor.dto.ScoringDataDTO;
 import com.example.conveyor.service.abstraction.LoanService;
 import com.example.conveyor.wrapper.ErrorResponse;
@@ -8,8 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,14 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/conveyor")
 @RequiredArgsConstructor
+@Slf4j
 public class CreditConveyorController {
 
     private final LoanService loanService;
-
-    private static final Logger log = LoggerFactory.getLogger(CreditConveyorController.class);
 
     @Operation(summary = "Get loan offers",
             description = "Calculates possible loan offers based on the data of the loan application")
@@ -35,14 +37,10 @@ public class CreditConveyorController {
 
     public ResponseEntity<Object> getLoanOffers(@RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
         try {
-            log.info("Loan application - amount: {}, term: {}, firstName: {}, lastName: {}, middleName: {}, email: {}," +
-                            " birthdate: {}, passportSeries: {}, passportNumber: {}",
-                    loanApplicationRequestDTO.getAmount(), loanApplicationRequestDTO.getTerm(),
-                    loanApplicationRequestDTO.getFirstName(), loanApplicationRequestDTO.getLastName(),
-                    loanApplicationRequestDTO.getMiddleName(), loanApplicationRequestDTO.getEmail(),
-                    loanApplicationRequestDTO.getBirthdate(), loanApplicationRequestDTO.getPassportSeries(),
-                    loanApplicationRequestDTO.getPassportNumber());
-            return new ResponseEntity<>(loanService.getLoanOffers(loanApplicationRequestDTO), HttpStatus.OK);
+            log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
+            List<LoanOfferDTO> loanOffers = loanService.getLoanOffers(loanApplicationRequestDTO);
+            log.info("getLoanOffers(), List<LoanOfferDTO>: {}", loanOffers);
+            return new ResponseEntity<>(loanOffers, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponse errorResponse = ErrorResponse.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -61,17 +59,10 @@ public class CreditConveyorController {
     @PostMapping("/calculation")
     public ResponseEntity<Object> calculateCredit(@RequestBody ScoringDataDTO scoringData) {
         try {
-            log.info("Scoring data - amount: {}, term: {}, firstName: {}, lastName: {}, middleName: {}, gender: {}," +
-                            " birthdate: {}, passportSeries: {}, passportNumber: {}, passportIssueDate: {}," +
-                            " passportIssueBranch: {}, maritalStatus: {}, dependentAmount: {}, employment: {}," +
-                            " account: {}, isInsuranceEnabled: {}, isSalaryClient: {}",
-                    scoringData.getAmount(), scoringData.getTerm(), scoringData.getFirstName(),
-                    scoringData.getLastName(), scoringData.getMiddleName(), scoringData.getGender(),
-                    scoringData.getBirthdate(),scoringData.getPassportSeries(), scoringData.getPassportNumber(),
-                    scoringData.getPassportIssueDate(),scoringData.getPassportIssueBranch(),
-                    scoringData.getMaritalStatus(), scoringData.getDependentAmount(), scoringData.getEmployment(),
-                    scoringData.getAccount(), scoringData.getIsInsuranceEnabled(), scoringData.getIsSalaryClient());
-            return new ResponseEntity<>(loanService.calculateCredit(scoringData), HttpStatus.OK);
+            log.info("calculateCredit(), ScoringDataDTO: {}", scoringData);
+            CreditDTO creditDTO = loanService.calculateCredit(scoringData);
+            log.info("calculateCredit(), CreditDTO: {}", scoringData);
+            return new ResponseEntity<>(creditDTO, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponse errorResponse = ErrorResponse.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())

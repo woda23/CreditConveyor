@@ -3,6 +3,7 @@ package com.example.conveyor.service.realization;
 import com.example.conveyor.dto.LoanApplicationRequestDTO;
 import com.example.conveyor.exception.IllegalLoanRequestException;
 import com.example.conveyor.service.abstraction.LoanPreScoringService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 /**
  * Сервис для предварительной проверки заявки на кредит перед ее обработкой.
  */
+@Slf4j
 @Service
 public class LoanPreScoringServiceImpl implements LoanPreScoringService {
     private static final String NAME_REGEX = "[a-zA-Z]{2,30}";
@@ -20,7 +22,6 @@ public class LoanPreScoringServiceImpl implements LoanPreScoringService {
     private static final String PASSPORT_SERIES_REGEX = "\\d{4}";
     private static final String PASSPORT_NUMBER_REGEX = "\\d{6}";
 
-    private static final Logger log = LoggerFactory.getLogger(LoanPreScoringServiceImpl.class);
     /**
      * Проверяет заявку на кредит на соответствие правилам прескоринга.
      *
@@ -46,7 +47,7 @@ public class LoanPreScoringServiceImpl implements LoanPreScoringService {
         if (!resultExceptionMessage.isEmpty()) {
             throw new IllegalArgumentException(resultExceptionMessage);
         }
-        log.info("Prescore passed successfully");
+        log.info("preScoreLoanApplication(), prescore passed successfully");
     }
 
     private String validateName(String name, String field) throws IllegalLoanRequestException {
