@@ -36,19 +36,10 @@ public class CreditConveyorController {
     @PostMapping("/offers")
 
     public ResponseEntity<Object> getLoanOffers(@RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
-        try {
             log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
             List<LoanOfferDTO> loanOffers = loanService.getLoanOffers(loanApplicationRequestDTO);
             log.info("getLoanOffers(), List<LoanOfferDTO>: {}", loanOffers);
             return new ResponseEntity<>(loanOffers, HttpStatus.OK);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = ErrorResponse.builder()
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                    .message(e.getMessage())
-                    .build();
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @Operation(summary = "Get credit offer",
@@ -58,18 +49,9 @@ public class CreditConveyorController {
             @ApiResponse(responseCode = "400", description = "Invalid credit application data")})
     @PostMapping("/calculation")
     public ResponseEntity<Object> calculateCredit(@RequestBody ScoringDataDTO scoringData) {
-        try {
             log.info("calculateCredit(), ScoringDataDTO: {}", scoringData);
             CreditDTO creditDTO = loanService.calculateCredit(scoringData);
             log.info("calculateCredit(), CreditDTO: {}", scoringData);
             return new ResponseEntity<>(creditDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = ErrorResponse.builder()
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                    .message(e.getMessage())
-                    .build();
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }
