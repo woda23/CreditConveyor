@@ -51,6 +51,7 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+        log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         loanPreScoringService.preScoreLoanApplication(loanApplicationRequestDTO);
         List<LoanOfferDTO> loanOffers = new ArrayList<>();
         LoanOfferDTO loanOfferFF = getLoanOffer(loanApplicationRequestDTO, false, false);
@@ -61,24 +62,12 @@ public class LoanServiceImpl implements LoanService {
         loanOffers.add(loanOfferFT);
         loanOffers.add(loanOfferTF);
         loanOffers.add(loanOfferTT);
-        logging(loanOfferFF);
-        logging(loanOfferFT);
-        logging(loanOfferTF);
-        logging(loanOfferTT);
+        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferFF);
+        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferFT);
+        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferTF);
+        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferTT);
         loanOffers.sort(Comparator.comparing(LoanOfferDTO::getRate).reversed());
         return loanOffers;
-    }
-
-    private static void logging(LoanOfferDTO loanOfferDTO) {
-        log.info("applicationId: {}, requestedAmount: {}, totalAmount: {}, term: {}, monthlyPayment: {}, rate: {}, isInsuranceEnabled: {}, isSalaryClient: {}",
-                loanOfferDTO.getApplicationId(),
-                loanOfferDTO.getRequestedAmount(),
-                loanOfferDTO.getTotalAmount(),
-                loanOfferDTO.getTerm(),
-                loanOfferDTO.getMonthlyPayment(),
-                loanOfferDTO.getRate(),
-                loanOfferDTO.getIsInsuranceEnabled(),
-                loanOfferDTO.getIsSalaryClient());
     }
 
 
@@ -90,6 +79,7 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     public CreditDTO calculateCredit(ScoringDataDTO scoringDataDTO) {
+        log.info("calculateCredit(), ScoringDataDTO: {}", scoringDataDTO);
         var scoringVerdict = loanScoringService.calculateScore(scoringDataDTO);
         if (!scoringVerdict.isApproved()) {
             throw new IllegalLoanRequestException("You can't take out a loan");
@@ -122,11 +112,7 @@ public class LoanServiceImpl implements LoanService {
                 .isInsuranceEnabled(isInsuranceEnabled)
                 .isSalaryClient(isSalaryClient)
                 .build();
-        log.info("Credit - amount: {}, term: {}, monthlyPayment: {}, rate: {}, psk: {}, isInsuranceEnabled: {}, " +
-                        "isSalaryClient: {}, paymentSchedule: {}",
-                creditDTO.getAmount(), creditDTO.getTerm(), creditDTO.getMonthlyPayment(), creditDTO.getRate(),
-                creditDTO.getPsk(), creditDTO.getIsInsuranceEnabled(), creditDTO.getIsSalaryClient(),
-                creditDTO.getPaymentSchedule());
+        log.info("calculateCredit(), CreditDTO: {}", creditDTO);
         return creditDTO;
     }
 

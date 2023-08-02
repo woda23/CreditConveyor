@@ -92,7 +92,7 @@ public class LoanScoringServiceImpl implements LoanScoringService {
 
         // Результат
         result.setApproved(true);
-        log.info("new rate: {}" );
+        log.info("calculateScore(), ScoringResult: {}", result);
         return result;
     }
 }
