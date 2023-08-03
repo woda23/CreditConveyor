@@ -4,8 +4,6 @@ import com.example.conveyor.dto.ScoringDataDTO;
 import com.example.conveyor.service.abstraction.LoanScoringService;
 import com.example.conveyor.wrapper.ScoringResult;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,6 +24,7 @@ public class LoanScoringServiceImpl implements LoanScoringService {
      */
     @Override
     public ScoringResult calculateScore(ScoringDataDTO scoringData) {
+        log.info("calculateScore(), ScoringDataDTO: {}", scoringData);
         ScoringResult result = new ScoringResult();
 
         // Рабочий статус

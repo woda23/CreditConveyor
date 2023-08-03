@@ -4,8 +4,6 @@ import com.example.conveyor.dto.LoanApplicationRequestDTO;
 import com.example.conveyor.exception.IllegalLoanRequestException;
 import com.example.conveyor.service.abstraction.LoanPreScoringService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -50,55 +48,55 @@ public class LoanPreScoringServiceImpl implements LoanPreScoringService {
         log.info("preScoreLoanApplication(), prescore passed successfully");
     }
 
-    private String validateName(String name, String field) throws IllegalLoanRequestException {
+    private String validateName(String name, String field) {
         if (name == null || !name.matches(NAME_REGEX)) {
             return (field + " is invalid ");
         }
         return "";
     }
-    private String validateMiddleName(String name) throws IllegalLoanRequestException {
+    private String validateMiddleName(String name) {
         if (name != null && !name.matches(NAME_REGEX)) {
             return ("Middle name is invalid ");
         }
         return "";
     }
 
-    private String validateLoanAmount(BigDecimal amount) throws IllegalLoanRequestException {
+    private String validateLoanAmount(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.valueOf(10000)) < 0) {
             return "Loan amount is invalid ";
         }
         return "";
     }
 
-    private String validateLoanTerm(Integer term) throws IllegalLoanRequestException {
+    private String validateLoanTerm(Integer term) {
         if (term == null || term < 6) {
             return "Loan term is invalid ";
         }
         return "";
     }
 
-    private String validateBirthDate(LocalDate birthdate) throws IllegalLoanRequestException {
+    private String validateBirthDate(LocalDate birthdate) {
         if (birthdate == null || birthdate.plusYears(18).isAfter(LocalDate.now())) {
             return "Birth date is invalid ";
         }
         return "";
     }
 
-    private String validateEmail(String email) throws IllegalLoanRequestException {
+    private String validateEmail(String email) {
         if (email == null || !email.matches(EMAIL_REGEX)) {
             return "Email is invalid ";
         }
         return "";
     }
 
-    private String validatePassportSeries(String passportSeries) throws IllegalLoanRequestException {
+    private String validatePassportSeries(String passportSeries) {
         if (passportSeries == null || !passportSeries.matches(PASSPORT_SERIES_REGEX)) {
             return "Passport series is invalid ";
         }
         return "";
     }
 
-    private String validatePassportNumber(String passportNumber) throws IllegalLoanRequestException {
+    private String validatePassportNumber(String passportNumber) {
         if (passportNumber == null || !passportNumber.matches(PASSPORT_NUMBER_REGEX)) {
             return "Passport number is invalid ";
         }

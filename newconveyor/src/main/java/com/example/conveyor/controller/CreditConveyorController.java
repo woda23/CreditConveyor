@@ -5,7 +5,6 @@ import com.example.conveyor.dto.LoanApplicationRequestDTO;
 import com.example.conveyor.dto.LoanOfferDTO;
 import com.example.conveyor.dto.ScoringDataDTO;
 import com.example.conveyor.service.abstraction.LoanService;
-import com.example.conveyor.wrapper.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -51,7 +50,7 @@ public class CreditConveyorController {
     public ResponseEntity<Object> calculateCredit(@RequestBody ScoringDataDTO scoringData) {
             log.info("calculateCredit(), ScoringDataDTO: {}", scoringData);
             CreditDTO creditDTO = loanService.calculateCredit(scoringData);
-            log.info("calculateCredit(), CreditDTO: {}", scoringData);
+            log.info("calculateCredit(), CreditDTO: {}", creditDTO);
             return new ResponseEntity<>(creditDTO, HttpStatus.OK);
     }
 }

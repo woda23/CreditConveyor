@@ -12,8 +12,6 @@ import com.example.conveyor.service.abstraction.LoanService;
 import com.example.conveyor.wrapper.AmountAndRateInRelationOfBooleanParams;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -62,11 +60,8 @@ public class LoanServiceImpl implements LoanService {
         loanOffers.add(loanOfferFT);
         loanOffers.add(loanOfferTF);
         loanOffers.add(loanOfferTT);
-        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferFF);
-        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferFT);
-        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferTF);
-        log.info("getLoanOffers(), LoanOfferDTO: {}", loanOfferTT);
         loanOffers.sort(Comparator.comparing(LoanOfferDTO::getRate).reversed());
+        log.info("getLoanOffers(), List<LoanOfferDTO>: {}", loanOffers);
         return loanOffers;
     }
 
@@ -178,9 +173,9 @@ public class LoanServiceImpl implements LoanService {
                                                                     BigDecimal amount, BigDecimal rate) {
         if (!isInsuranceEnabled && !isSalaryClient)
             return new AmountAndRateInRelationOfBooleanParams(amount, rate.add(BigDecimal.valueOf(5)));
-        if (!isInsuranceEnabled && isSalaryClient)
+        if (!isInsuranceEnabled)
             return new AmountAndRateInRelationOfBooleanParams(amount, rate.add(BigDecimal.ONE));
-        if (isInsuranceEnabled && !isSalaryClient)
+        if (!isSalaryClient)
             return new AmountAndRateInRelationOfBooleanParams(amount.add(insurancePrice),
                     rate.subtract(BigDecimal.valueOf(3)));
         return new AmountAndRateInRelationOfBooleanParams(amount.add(insurancePrice),
