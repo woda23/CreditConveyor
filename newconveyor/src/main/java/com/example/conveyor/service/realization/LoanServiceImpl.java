@@ -49,7 +49,7 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
-        log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
+        log.debug("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         loanPreScoringService.preScoreLoanApplication(loanApplicationRequestDTO);
         List<LoanOfferDTO> loanOffers = new ArrayList<>();
         LoanOfferDTO loanOfferFF = getLoanOffer(loanApplicationRequestDTO, false, false);
@@ -61,7 +61,7 @@ public class LoanServiceImpl implements LoanService {
         loanOffers.add(loanOfferTF);
         loanOffers.add(loanOfferTT);
         loanOffers.sort(Comparator.comparing(LoanOfferDTO::getRate).reversed());
-        log.info("getLoanOffers(), List<LoanOfferDTO>: {}", loanOffers);
+        log.debug("getLoanOffers(), List<LoanOfferDTO>: {}", loanOffers);
         return loanOffers;
     }
 
@@ -74,7 +74,7 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     public CreditDTO calculateCredit(ScoringDataDTO scoringDataDTO) {
-        log.info("calculateCredit(), ScoringDataDTO: {}", scoringDataDTO);
+        log.debug("calculateCredit(), ScoringDataDTO: {}", scoringDataDTO);
         var scoringVerdict = loanScoringService.calculateScore(scoringDataDTO);
         if (!scoringVerdict.isApproved()) {
             throw new IllegalLoanRequestException("You can't take out a loan");
@@ -107,7 +107,7 @@ public class LoanServiceImpl implements LoanService {
                 .isInsuranceEnabled(isInsuranceEnabled)
                 .isSalaryClient(isSalaryClient)
                 .build();
-        log.info("calculateCredit(), CreditDTO: {}", creditDTO);
+        log.debug("calculateCredit(), CreditDTO: {}", creditDTO);
         return creditDTO;
     }
 

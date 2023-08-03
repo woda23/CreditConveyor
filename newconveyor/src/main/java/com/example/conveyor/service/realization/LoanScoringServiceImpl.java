@@ -24,7 +24,7 @@ public class LoanScoringServiceImpl implements LoanScoringService {
      */
     @Override
     public ScoringResult calculateScore(ScoringDataDTO scoringData) {
-        log.info("calculateScore(), ScoringDataDTO: {}", scoringData);
+        log.debug("calculateScore(), ScoringDataDTO: {}", scoringData);
         ScoringResult result = new ScoringResult();
 
         // Рабочий статус
@@ -91,7 +91,7 @@ public class LoanScoringServiceImpl implements LoanScoringService {
 
         // Результат
         result.setApproved(true);
-        log.info("calculateScore(), ScoringResult: {}", result);
+        log.debug("calculateScore(), ScoringResult: {}", result);
         return result;
     }
 }
