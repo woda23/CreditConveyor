@@ -28,7 +28,7 @@ public class LoanPreScoringServiceImpl implements LoanPreScoringService {
      */
     @Override
     public void preScoreLoanApplication(LoanApplicationRequestDTO loanApplicationRequestDTO) {
-        log.debug("preScoreLoanApplication(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
+        log.info("preScoreLoanApplication(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         if (loanApplicationRequestDTO == null) {
             throw new NullPointerException("Loan application request is null");
         }
