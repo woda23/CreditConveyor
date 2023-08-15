@@ -155,7 +155,7 @@ class RequestServiceTests {
                         EmploymentStatus.UNEMPLOYED,
                         "2122",
                         BigDecimal.valueOf(5000),
-                        Position.MIDDLE_MANAGER,
+                        Position.MID_MANAGER,
                         60,
                         12
                 ));
