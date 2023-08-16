@@ -134,7 +134,7 @@ public class DealService {
         var application = getApplicationByClientId(client);
         var credit = application.getCredit();
         LoanOfferDTO offer = new Gson().fromJson(application.getAppliedOffer(), LoanOfferDTO.class);
-        ScoringDataDTO scoringData = ScoringDataDTO.builder()
+        return ScoringDataDTO.builder()
                 .amount(offer.getTotalAmount())
                 .term(offer.getTerm())
                 .firstName(client.getFirstName())
@@ -153,7 +153,6 @@ public class DealService {
                 .isInsuranceEnabled(credit.getInsuranceEnable())
                 .isSalaryClient(credit.getSalaryClient())
                 .build();
-        return scoringData;
     }
 
     private Application getApplicationById(Long applicationId) {

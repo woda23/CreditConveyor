@@ -7,6 +7,7 @@ import com.example.deal.dto.ScoringDataDTO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -20,6 +21,12 @@ import java.util.List;
 @Service
 @Slf4j
 public class LoanService {
+
+    @Value("${loan.offers.url}")
+    private String loanOffersUrl;
+
+    @Value("${credit.offer.url}")
+    private String creditOfferUrl;
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         try {
@@ -27,7 +34,7 @@ public class LoanService {
             String json = gson.toJson(loanApplicationRequestDTO);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/conveyor/offers"))
+                    .uri(URI.create(loanOffersUrl))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
@@ -40,10 +47,10 @@ public class LoanService {
                 log.info("getLoanOffers(), List<LoanOfferDTO>: {}", resultList);
                 return resultList;
             } catch (Exception e) {
-                throw new RuntimeException(responseBody);
+                throw new IllegalArgumentException(responseBody);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -54,7 +61,7 @@ public class LoanService {
             String json = gson.toJson(scoringDataDTO);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/conveyor/calculation"))
+                    .uri(URI.create(creditOfferUrl))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
