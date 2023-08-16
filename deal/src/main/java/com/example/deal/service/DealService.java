@@ -18,6 +18,7 @@ import com.example.deal.repository.ClientRepository;
 import com.example.deal.repository.CreditRepository;
 import com.example.deal.repository.PassportRepository;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DealService {
 
     private final LoanService loanService;
@@ -47,6 +49,7 @@ public class DealService {
     }
 
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request) {
+        log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", request);
         Client client = createClient(request);
         Application application = createApplication(client);
         List<LoanOfferDTO> loanOffers = loanService.getLoanOffers(request);
@@ -55,6 +58,7 @@ public class DealService {
     }
 
     public void selectLoanOffer(LoanOfferDTO offer) {
+        log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         Application application = getApplicationById(offer.getApplicationId());
         updateApplicationWithSelectedOffer(application, offer);
         Credit credit = createCredit(offer);
@@ -63,6 +67,7 @@ public class DealService {
     }
 
     public CreditDTO calculateLoan(FinishRegistrationRequestDTO request, Long applicationId) {
+        log.info("calculateLoan(), FinishRegistrationRequestDTO: {}, Long: {}", request, applicationId);
         Application application = getApplicationById(applicationId);
         ScoringDataDTO scoringData = createScoringData(request, application.getClient());
         var result = loanService.getCreditDTO(scoringData);

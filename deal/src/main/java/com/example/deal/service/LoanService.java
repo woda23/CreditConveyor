@@ -6,6 +6,7 @@ import com.example.deal.dto.LoanOfferDTO;
 import com.example.deal.dto.ScoringDataDTO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -17,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class LoanService {
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+        log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         try {
             Gson gson = new Gson();
             String json = gson.toJson(loanApplicationRequestDTO);
@@ -34,6 +37,7 @@ public class LoanService {
                 Type listType = new TypeToken<ArrayList<LoanOfferDTO>>() {
                 }.getType();
                 ArrayList<LoanOfferDTO> resultList = gson.fromJson(responseBody, listType);
+                log.info("getLoanOffers(), List<LoanOfferDTO>: {}", resultList);
                 return resultList;
             } catch (Exception e) {
                 throw new RuntimeException(responseBody);
@@ -44,6 +48,7 @@ public class LoanService {
     }
 
     public CreditDTO getCreditDTO(ScoringDataDTO scoringDataDTO) {
+        log.info("getCreditDTO(), ScoringDataDTO: {}", scoringDataDTO);
         try {
             Gson gson = new Gson();
             String json = gson.toJson(scoringDataDTO);
@@ -59,8 +64,9 @@ public class LoanService {
                 throw new IllegalArgumentException(responseBody);
             }
             try {
-                CreditDTO resultList = gson.fromJson(responseBody, CreditDTO.class);
-                return resultList;
+                CreditDTO creditDTO = gson.fromJson(responseBody, CreditDTO.class);
+                log.info("getCreditDTO(), CreditDTO: {}", creditDTO);
+                return creditDTO;
             } catch (Exception e) {
                 throw new IllegalArgumentException(responseBody);
             }
