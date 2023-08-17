@@ -3,13 +3,16 @@ package com.example.deal.mappers;
 import com.example.deal.dto.FinishRegistrationRequestDTO;
 import com.example.deal.dto.LoanOfferDTO;
 import com.example.deal.dto.ScoringDataDTO;
+import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
-import com.example.deal.entity.Credit;
+import com.google.gson.Gson;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class ScoringDTOMapper {
-    public ScoringDataDTO mapToEntity(FinishRegistrationRequestDTO request, Client client, LoanOfferDTO offer, Credit credit) {
+    public ScoringDataDTO mapToEntity(FinishRegistrationRequestDTO request, Client client, Application application) {
+        var credit = application.getCredit();
+        LoanOfferDTO offer = new Gson().fromJson(application.getAppliedOffer(), LoanOfferDTO.class);
         return ScoringDataDTO.builder()
                 .amount(offer.getTotalAmount())
                 .term(offer.getTerm())

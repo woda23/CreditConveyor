@@ -21,6 +21,7 @@ import com.example.deal.repository.ApplicationRepository;
 import com.example.deal.repository.ClientRepository;
 import com.example.deal.repository.CreditRepository;
 import com.example.deal.repository.PassportRepository;
+import com.example.deal.service.abstraction.DealService;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +37,11 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class DealServiceImpl {
-
+public class DealServiceImpl implements DealService {
     private final LoanServiceImpl loanServiceImpl;
     private final ClientRepository clientRepository;
     private final ApplicationRepository applicationRepository;
     private final PassportRepository passportRepository;
-
     private final CreditRepository creditRepository;
     @Transactional
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request) {
@@ -69,7 +68,8 @@ public class DealServiceImpl {
     public CreditDTO calculateLoan(FinishRegistrationRequestDTO request, Long applicationId) {
         log.info("calculateLoan(), FinishRegistrationRequestDTO: {}, Long: {}", request, applicationId);
         Application application = getApplicationById(applicationId);
-        ScoringDataDTO scoringData = createScoringData(request, application.getClient());
+        ScoringDataDTO scoringData = new ScoringDTOMapper().mapToEntity(request, application.getClient(),
+                getApplicationByClientId(application.getClient()));
         var result = loanServiceImpl.getCreditDTO(scoringData);
         var credit = application.getCredit();
         credit.setAmount(result.getAmount());
@@ -86,22 +86,29 @@ public class DealServiceImpl {
         return result;
     }
 
-    private Client createClient(LoanApplicationRequestDTO request) {
+    @Transactional
+    public Client createClient(LoanApplicationRequestDTO request) {
+        log.info("createClient(), LoanApplicationRequestDTO: {}", request);
         Client client = new ClientMapper().mapToEntity(request);
         var passport = savePassport(new PassportMapper().mapToEntity(request));
         client.setPassport(passport);
+        log.info("createClient(), Client: {}", client);
         return saveClient(client);
     }
 
-    private Application createApplication(Client client) {
+    @Transactional
+    public Application createApplication(Client client) {
+        log.info("createApplication(), Client: {}", client);
         return saveApplication(new ClientMapper().entityToMap(client));
     }
-
-    private Credit createCredit(LoanOfferDTO request) {
+    @Transactional
+    public Credit createCredit(LoanOfferDTO request) {
+        log.info("createCredit(), LoanOfferDTO: {}", request);
         return saveCredit(new CreditMapper().mapToEntity(request));
     }
 
-    private void updateApplicationWithSelectedOffer(Application application, LoanOfferDTO offer) {
+    public void updateApplicationWithSelectedOffer(Application application, LoanOfferDTO offer) {
+        log.info("updateApplicationWithSelectedOffer(), Application: {}, LoanOfferDTO: {}", application, offer);
         var status = ApplicationStatus.PREAPPROVAL;
         application.setStatus(status.toString());
         var gson = new Gson();
@@ -119,28 +126,23 @@ public class DealServiceImpl {
         }
         application.setAppliedOffer(gson.toJson(offer));
         saveApplication(application);
+        log.info("createCredit(), Application: {}", application);
     }
 
-    private ScoringDataDTO createScoringData(FinishRegistrationRequestDTO request, Client client) {
-        var application = getApplicationByClientId(client);
-        var credit = application.getCredit();
-        LoanOfferDTO offer = new Gson().fromJson(application.getAppliedOffer(), LoanOfferDTO.class);
-        return new ScoringDTOMapper().mapToEntity(request, client, offer, credit);
-    }
-
-    private Application getApplicationById(Long applicationId) {
+    @Transactional
+    public Application getApplicationById(Long applicationId) {
         return applicationRepository.findById(applicationId).orElseThrow();
     }
-
-    private Application getApplicationByClientId(Client client) {
+    @Transactional
+    public Application getApplicationByClientId(Client client) {
         return applicationRepository.findApplicationByClient(client).get();
     }
-
-    private Application saveApplication(Application application) {
+    @Transactional
+    public Application saveApplication(Application application) {
         return applicationRepository.save(application);
     }
-
-    private Credit saveCredit(Credit credit) {
+    @Transactional
+    public Credit saveCredit(Credit credit) {
         return creditRepository.save(credit);
     }
 

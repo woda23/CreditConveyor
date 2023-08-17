@@ -4,6 +4,7 @@ import com.example.deal.dto.CreditDTO;
 import com.example.deal.dto.LoanApplicationRequestDTO;
 import com.example.deal.dto.LoanOfferDTO;
 import com.example.deal.dto.ScoringDataDTO;
+import com.example.deal.service.abstraction.LoanService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 @Slf4j
-public class LoanServiceImpl {
+public class LoanServiceImpl implements LoanService {
 
     @Value("${conveyor.url.offers}")
     private String loanOffersUrl;
