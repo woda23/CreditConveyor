@@ -31,7 +31,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class IntegrationTests {
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:11.1")
-            .withDatabaseName("formulas")
+            .withDatabaseName("deal")
             .withUsername("postgres")
             .withPassword("password")
             .withExposedPorts(5432).withInitScript("db.sql");
@@ -40,7 +40,7 @@ public class IntegrationTests {
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
             TestPropertyValues.of(
-                    String.format("spring.datasource.url=jdbc:postgresql://localhost:%d/formulas", postgres.getFirstMappedPort()),
+                    String.format("spring.datasource.url=jdbc:postgresql://localhost:%d/deal", postgres.getFirstMappedPort()),
                     "spring.datasource.username=postgres",
                     "spring.datasource.password=password"
             ).applyTo(applicationContext);
