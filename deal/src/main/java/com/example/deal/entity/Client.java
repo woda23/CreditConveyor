@@ -1,6 +1,5 @@
-package com.example.deal.dto.entity;
+package com.example.deal.entity;
 
-import com.example.deal.dto.jsonb.Passport;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +36,9 @@ public class Client {
     private String lastName;
     @Column(name = "middle_name")
     private String middleName;
+    @Column(name = "email")
     private String email;
+    @Column(name = "gender")
     private String gender;
     @Column(name = "marital_status")
     private String maritalStatus;
@@ -49,6 +50,7 @@ public class Client {
     @JoinColumn(name = "passport_id", referencedColumnName = "passport_id")
     private Passport passport;
     @Column(name = "employment_id")
-    private String employmentId;
+    private Long employmentId;
+    @Column(name = "account")
     private String account;
 }

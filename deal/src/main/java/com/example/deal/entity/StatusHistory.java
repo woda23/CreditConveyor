@@ -1,4 +1,4 @@
-package com.example.deal.dto.jsonb;
+package com.example.deal.entity;
 
 import com.example.deal.dto.enums.ApplicationStatus;
 import com.example.deal.dto.enums.ChangeType;
@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -17,6 +19,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StatusHistory {
     public ApplicationStatus status;
-    public String timestamp;
+    public Timestamp timestamp;
     public ChangeType change_type;
 }

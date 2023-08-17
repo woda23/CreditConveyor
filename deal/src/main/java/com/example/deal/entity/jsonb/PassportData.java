@@ -1,4 +1,4 @@
-package com.example.deal.dto;
+package com.example.deal.entity.jsonb;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

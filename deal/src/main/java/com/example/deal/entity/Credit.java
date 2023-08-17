@@ -1,6 +1,5 @@
-package com.example.deal.dto.entity;
+package com.example.deal.entity;
 
-import com.example.deal.dto.PaymentScheduleElement;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,28 +31,23 @@ public class Credit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "credit_id")
     private Long id;
-
+    @Column(name = "account")
     private BigDecimal amount;
-
+    @Column(name = "term")
     private Integer term;
-
     @Column(name = "monthly_payment")
     private BigDecimal monthlyPayment;
-
+    @Column(name = "rate")
     private BigDecimal rate;
-
+    @Column(name = "psk")
     private BigDecimal psk;
-
     @Column(name = "payment_schedule")
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<PaymentScheduleElement> paymentSchedule;
-
+    private List<PaymentScheduleElementEntity> paymentSchedule;
     @Column(name = "insurance_enable")
     private Boolean insuranceEnable;
-
     @Column(name = "salary_client")
     private Boolean salaryClient;
-
     @Column(name = "credit_status")
     private String creditStatus;
 }

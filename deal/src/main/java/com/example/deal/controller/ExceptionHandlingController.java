@@ -18,7 +18,7 @@ public class ExceptionHandlingController {
                 .message(e.getMessage())
                 .build();
         ResponseEntity<ErrorResponse> errorResponseResponseEntity = new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        log.info("handleInvalidLoanApplicationDataException(), ResponseEntity<ErrorResponse>: {}", errorResponseResponseEntity);
+        log.error("handleInvalidLoanApplicationDataException(), ErrorResponse: {}", errorResponse);
         return errorResponseResponseEntity;
     }
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class ScoringDataDTO {
     private String lastName;
     private String middleName;
     private Gender gender;
-    private String birthdate;
+    private LocalDate birthdate;
     private String passportSeries;
     private String passportNumber;
     private String passportIssueDate;

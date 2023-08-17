@@ -1,5 +1,6 @@
-package com.example.deal.dto.jsonb;
+package com.example.deal.entity;
 
+import com.example.deal.entity.jsonb.PassportData;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,23 +17,23 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
-@Table(name = "employment")
+@Table(name = "passport")
 @Getter
 @Setter
 @EqualsAndHashCode
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employment {
+public class Passport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employment_id")
-    public Long employmentId;
+    @Column(name = "passport_id")
+    public Long passportId;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    public EmploymentData employmentData;
+    public PassportData passportData;
 
-    public Employment(EmploymentData employmentData) {
-        this.employmentData = employmentData;
+    public Passport(PassportData passportData) {
+        this.passportData = passportData;
     }
 }

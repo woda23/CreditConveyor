@@ -1,6 +1,5 @@
-package com.example.deal.dto.entity;
+package com.example.deal.entity;
 
-import com.example.deal.dto.jsonb.StatusHistory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,10 +10,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -23,9 +20,7 @@ import java.util.ArrayList;
 
 @Entity
 @Table(name = "application")
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,12 +38,14 @@ public class Application {
     @JoinColumn(name = "credit_id", referencedColumnName = "credit_id")
     private Credit credit;
 
+    @Column(name = "status")
     private String status;
 
     @Column(name = "creation_data")
     private Timestamp creationData;
 
     @Column(name = "applied_offer")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String appliedOffer;
 
     @Column(name = "sign_date")
