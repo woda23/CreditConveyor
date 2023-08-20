@@ -1,5 +1,7 @@
 package com.example.deal.entity.jsonb;
 
+import com.example.deal.dto.enums.EmploymentStatus;
+import com.example.deal.dto.enums.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,10 +18,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmploymentData {
-    public String status;
+    public EmploymentStatus status;
     public String employer_inn;
     public BigDecimal salary;
-    public String position;
+    public Position position;
     public Integer work_experience_total;
     public Integer work_experience_current;
 }

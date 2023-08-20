@@ -8,10 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -20,9 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "credit")
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

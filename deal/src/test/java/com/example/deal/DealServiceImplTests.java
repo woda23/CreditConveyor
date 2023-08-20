@@ -12,6 +12,8 @@ import com.example.deal.dto.enums.Position;
 import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
 import com.example.deal.entity.Credit;
+import com.example.deal.entity.jsonb.EmploymentData;
+import com.example.deal.mappers.EmploymentMapper;
 import com.example.deal.mappers.ScoringDTOMapper;
 import com.example.deal.repository.ApplicationRepository;
 import com.example.deal.repository.ClientRepository;
@@ -41,8 +43,10 @@ public class DealServiceImplTests {
     private DealServiceImpl dealServiceImpl;
     @Autowired
     private CreditRepository creditRepository;
+    @Autowired
+    private EmploymentMapper employmentMapper;
     @Test
-    public void checkCorrectGetLoanOffers2() {
+    public void checkCorrectGetLoanOffers() {
         LoanApplicationRequestDTO request = getLoanApplicationRequestDTO();
 
         List<LoanOfferDTO> response = new ArrayList<>();
@@ -102,12 +106,16 @@ public class DealServiceImplTests {
 
         LoanServiceImpl loanService = Mockito.mock(LoanServiceImpl.class);
         Application application = dealServiceImpl.getApplicationById(Long.valueOf(1));
-        ScoringDataDTO scoringData = new ScoringDTOMapper().mapToEntity(request, application.getClient(),
+        ScoringDataDTO scoringData = new ScoringDTOMapper().mapForScoringDataDTO(request, application.getClient(),
                 dealServiceImpl.getApplicationByClientId(application.getClient()));
 
         when(loanService.getCreditDTO(scoringData)).thenReturn(null);
         loanService.getCreditDTO(scoringData);
-
+        EmploymentData employmentData = employmentMapper.mapToEmploymentData(request.getEmployment());
+        Client client = application.getClient();
+        var employment = client.getEmployment();
+        employment.setEmploymentData(employmentData);
+        dealServiceImpl.saveEmployment(employment);
         loanService.getCreditDTO(scoringData);
         var credit = application.getCredit();
         credit.setAmount(new BigDecimal("500000.00"));
@@ -117,7 +125,7 @@ public class DealServiceImplTests {
         credit.setPsk(new BigDecimal("15.572"));
         dealServiceImpl.saveCredit(credit);
 
-        Client client = clientRepository.findClientByFirstName("IvanIvanIvan").get();
+        client = clientRepository.findClientByFirstName("IvanIvanIvan").get();
         Credit creditFromDb = applicationRepository.findApplicationByClient(client).get().getCredit();
         Integer term = creditRepository.findById(creditFromDb.getId()).get().getTerm();
         Assertions.assertEquals(term, 12);

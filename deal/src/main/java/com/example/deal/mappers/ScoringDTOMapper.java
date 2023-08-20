@@ -7,10 +7,12 @@ import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
 import com.google.gson.Gson;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
+@Component
 public class ScoringDTOMapper {
-    public ScoringDataDTO mapToEntity(FinishRegistrationRequestDTO request, Client client, Application application) {
+    public ScoringDataDTO mapForScoringDataDTO(FinishRegistrationRequestDTO request, Client client, Application application) {
         var credit = application.getCredit();
         LoanOfferDTO offer = new Gson().fromJson(application.getAppliedOffer(), LoanOfferDTO.class);
         return ScoringDataDTO.builder()

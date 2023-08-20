@@ -10,16 +10,21 @@ import com.example.deal.dto.enums.ChangeType;
 import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
 import com.example.deal.entity.Credit;
+import com.example.deal.entity.Employment;
 import com.example.deal.entity.Passport;
 import com.example.deal.entity.PaymentScheduleElementEntity;
-import com.example.deal.entity.StatusHistory;
+import com.example.deal.entity.jsonb.EmploymentData;
+import com.example.deal.entity.jsonb.StatusHistory;
+import com.example.deal.mappers.ApplicationMapper;
 import com.example.deal.mappers.ClientMapper;
 import com.example.deal.mappers.CreditMapper;
+import com.example.deal.mappers.EmploymentMapper;
 import com.example.deal.mappers.PassportMapper;
 import com.example.deal.mappers.ScoringDTOMapper;
 import com.example.deal.repository.ApplicationRepository;
 import com.example.deal.repository.ClientRepository;
 import com.example.deal.repository.CreditRepository;
+import com.example.deal.repository.EmploymentRepository;
 import com.example.deal.repository.PassportRepository;
 import com.example.deal.service.abstraction.DealService;
 import com.google.gson.Gson;
@@ -37,13 +42,21 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class DealServiceImpl implements DealService {
     private final LoanServiceImpl loanServiceImpl;
     private final ClientRepository clientRepository;
     private final ApplicationRepository applicationRepository;
     private final PassportRepository passportRepository;
     private final CreditRepository creditRepository;
-    @Transactional
+    private final EmploymentRepository employmentRepository;
+    private final ApplicationMapper applicationMapper;
+    private final ClientMapper clientMapper;
+    private final CreditMapper creditMapper;
+    private final PassportMapper passportMapper;
+    private final ScoringDTOMapper scoringDTOMapper;
+    private final EmploymentMapper employmentMapper;
+
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request) {
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", request);
         Client client = createClient(request);
@@ -53,7 +66,7 @@ public class DealServiceImpl implements DealService {
         log.info("getLoanOffers(), List<LoanOfferDTO>: {}", loanOffers);
         return loanOffers;
     }
-    @Transactional
+
     public void selectLoanOffer(LoanOfferDTO offer) {
         log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         Application application = getApplicationById(offer.getApplicationId());
@@ -64,12 +77,16 @@ public class DealServiceImpl implements DealService {
         log.info("selectLoanOffer(), Application: {}", application);
     }
 
-    @Transactional
     public CreditDTO calculateLoan(FinishRegistrationRequestDTO request, Long applicationId) {
         log.info("calculateLoan(), FinishRegistrationRequestDTO: {}, Long: {}", request, applicationId);
         Application application = getApplicationById(applicationId);
-        ScoringDataDTO scoringData = new ScoringDTOMapper().mapToEntity(request, application.getClient(),
-                getApplicationByClientId(application.getClient()));
+        Client client = application.getClient();
+        EmploymentData employmentData = employmentMapper.mapToEmploymentData(request.getEmployment());
+        var employment = client.getEmployment();
+        employment.setEmploymentData(employmentData);
+        saveEmployment(employment);
+        ScoringDataDTO scoringData = scoringDTOMapper.mapForScoringDataDTO(request, client,
+                getApplicationByClientId(client));
         var result = loanServiceImpl.getCreditDTO(scoringData);
         var credit = application.getCredit();
         credit.setAmount(result.getAmount());
@@ -82,29 +99,29 @@ public class DealServiceImpl implements DealService {
                 .collect(Collectors.toList());
         credit.setPaymentSchedule(paymentScheduleElementEntities);
         saveCredit(credit);
+
         log.info("calculateLoan(), CreditDTO: {}", result);
         return result;
     }
 
-    @Transactional
     public Client createClient(LoanApplicationRequestDTO request) {
         log.info("createClient(), LoanApplicationRequestDTO: {}", request);
-        Client client = new ClientMapper().mapToEntity(request);
-        var passport = savePassport(new PassportMapper().mapToEntity(request));
+        Client client = clientMapper.mapToEntity(request);
+        saveEmployment(client.getEmployment());
+        var passport = savePassport(passportMapper.mapToEntity(request));
         client.setPassport(passport);
         log.info("createClient(), Client: {}", client);
         return saveClient(client);
     }
 
-    @Transactional
     public Application createApplication(Client client) {
         log.info("createApplication(), Client: {}", client);
-        return saveApplication(new ClientMapper().entityToMap(client));
+        return saveApplication(applicationMapper.mapToApplication(client));
     }
-    @Transactional
+
     public Credit createCredit(LoanOfferDTO request) {
         log.info("createCredit(), LoanOfferDTO: {}", request);
-        return saveCredit(new CreditMapper().mapToEntity(request));
+        return saveCredit(creditMapper.mapToEntity(request));
     }
 
     public void updateApplicationWithSelectedOffer(Application application, LoanOfferDTO offer) {
@@ -129,27 +146,31 @@ public class DealServiceImpl implements DealService {
         log.info("createCredit(), Application: {}", application);
     }
 
-    @Transactional
     public Application getApplicationById(Long applicationId) {
         return applicationRepository.findById(applicationId).orElseThrow();
     }
-    @Transactional
+
     public Application getApplicationByClientId(Client client) {
         return applicationRepository.findApplicationByClient(client).get();
     }
-    @Transactional
+
     public Application saveApplication(Application application) {
         return applicationRepository.save(application);
     }
-    @Transactional
+
     public Credit saveCredit(Credit credit) {
         return creditRepository.save(credit);
     }
 
-    private Client saveClient(Client client) {
+    public Employment saveEmployment(Employment employment) {
+        return employmentRepository.save(employment);
+    }
+
+    public Client saveClient(Client client) {
         return clientRepository.save(client);
     }
-    private Passport savePassport(Passport passport) {
+
+    public Passport savePassport(Passport passport) {
         return passportRepository.save(passport);
     }
 }

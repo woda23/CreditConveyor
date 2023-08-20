@@ -1,4 +1,4 @@
-package com.example.deal.entity;
+package com.example.deal.entity.jsonb;
 
 import com.example.deal.dto.enums.ApplicationStatus;
 import com.example.deal.dto.enums.ChangeType;

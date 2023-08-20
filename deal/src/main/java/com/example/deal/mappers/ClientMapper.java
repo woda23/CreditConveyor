@@ -1,14 +1,13 @@
 package com.example.deal.mappers;
 
 import com.example.deal.dto.LoanApplicationRequestDTO;
-import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
+import com.example.deal.entity.Employment;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
+@Component
 public class ClientMapper {
     public Client mapToEntity(LoanApplicationRequestDTO request) {
         return Client.builder()
@@ -17,13 +16,7 @@ public class ClientMapper {
                 .middleName(request.getMiddleName())
                 .email(request.getEmail())
                 .birthDate(request.getBirthdate())
-                .build();
-    }
-
-    public Application entityToMap(Client client) {
-        return Application.builder()
-                .client(client)
-                .creationData(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .employment(new Employment())
                 .build();
     }
 }

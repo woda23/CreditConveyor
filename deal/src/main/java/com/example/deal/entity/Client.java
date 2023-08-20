@@ -10,18 +10,14 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "client")
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,8 +45,9 @@ public class Client {
     @OneToOne
     @JoinColumn(name = "passport_id", referencedColumnName = "passport_id")
     private Passport passport;
-    @Column(name = "employment_id")
-    private Long employmentId;
+    @OneToOne
+    @JoinColumn(name = "employment_id", referencedColumnName = "employment_id")
+    private Employment employment;
     @Column(name = "account")
     private String account;
 }

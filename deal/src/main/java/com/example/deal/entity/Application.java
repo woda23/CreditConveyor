@@ -1,5 +1,6 @@
 package com.example.deal.entity;
 
+import com.example.deal.entity.jsonb.StatusHistory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,31 +30,23 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "application_id")
     private Long id;
-
     @OneToOne
     @JoinColumn(name = "client_id", referencedColumnName = "client_id")
     private Client client;
-
     @OneToOne
     @JoinColumn(name = "credit_id", referencedColumnName = "credit_id")
     private Credit credit;
-
     @Column(name = "status")
     private String status;
-
     @Column(name = "creation_data")
     private Timestamp creationData;
-
     @Column(name = "applied_offer")
     @JdbcTypeCode(SqlTypes.JSON)
     private String appliedOffer;
-
     @Column(name = "sign_date")
     private Timestamp signDate;
-
     @Column(name = "sec_code")
     private Integer secCode;
-
     @Column(name = "status_history")
     @JdbcTypeCode(SqlTypes.JSON)
     private ArrayList<StatusHistory> statusHistory;

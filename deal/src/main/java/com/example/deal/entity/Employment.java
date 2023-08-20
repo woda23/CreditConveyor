@@ -9,18 +9,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "employment")
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
