@@ -39,7 +39,7 @@ public class LoanScoringServiceImpl implements LoanScoringService {
 
         // Позиция на работе
         switch (scoringData.getEmployment().getPosition()) {
-            case MIDDLE_MANAGER -> result.setRate(result.getRate() + 1);
+            case MID_MANAGER -> result.setRate(result.getRate() + 1);
             case TOP_MANAGER -> result.setRate(result.getRate() + 4);
         }
 

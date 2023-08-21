@@ -1,4 +1,4 @@
-package com.example.conveyor.dto.enums;
+package com.example.deal.dto.enums;
 
 public enum MaritalStatus {
     MARRIED,
