@@ -46,6 +46,7 @@ public class DealServiceImpl implements com.example.application.service.abstract
                     .decoder(new GsonDecoder(gson))
                     .target(DealServiceClient.class, "http://localhost:8090");
             client.sendLoanOffer(offer);
+            log.info("selectLoanOffer(), request has been sent: {}", offer);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
