@@ -6,7 +6,6 @@ import com.example.conveyor.dto.LoanOfferDTO;
 import com.example.conveyor.dto.PaymentScheduleElement;
 import com.example.conveyor.dto.ScoringDataDTO;
 import com.example.conveyor.exception.IllegalLoanRequestException;
-import com.example.conveyor.service.abstraction.LoanPreScoringService;
 import com.example.conveyor.service.abstraction.LoanScoringService;
 import com.example.conveyor.service.abstraction.LoanService;
 import com.example.conveyor.wrapper.AmountAndRateInRelationOfBooleanParams;
@@ -36,8 +35,6 @@ public class LoanServiceImpl implements LoanService {
     @Value("${insurance.price}")
     private BigDecimal insurancePrice;
 
-    private final LoanPreScoringService loanPreScoringService;
-
     private final LoanScoringService loanScoringService;
     private static long loanOfferId = 0;
 
@@ -50,7 +47,6 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
-        loanPreScoringService.preScoreLoanApplication(loanApplicationRequestDTO);
         List<LoanOfferDTO> loanOffers = new ArrayList<>();
         LoanOfferDTO loanOfferFF = getLoanOffer(loanApplicationRequestDTO, false, false);
         LoanOfferDTO loanOfferFT = getLoanOffer(loanApplicationRequestDTO, false, true);
