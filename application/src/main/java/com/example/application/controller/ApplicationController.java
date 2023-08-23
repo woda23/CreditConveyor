@@ -13,25 +13,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/application")
 @RequiredArgsConstructor
 @Slf4j
 public class ApplicationController {
 
     private final ApplicationServiceImpl applicationService;
 
-    @Operation(summary = "Get loan offers",
-            description = "Calculates possible loan offers based on the data of the loan application")
+    @Operation(summary = "Get loan offers")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Loan offers returned successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid loan application data")})
-    @PostMapping("/")
+    @PostMapping("/application")
     public ResponseEntity<List<LoanOfferDTO>> calculateLoanOffers(@RequestBody LoanApplicationRequestDTO request) {
         log.info("calculateLoanOffers(), LoanApplicationRequestDTO: {}", request);
         List<LoanOfferDTO> loanOffers = applicationService.getLoanOffers(request);
@@ -39,12 +36,11 @@ public class ApplicationController {
         return new ResponseEntity<>(loanOffers, HttpStatus.OK);
     }
 
-    @Operation(summary = "Select loan offer",
-            description = "Put to the DB selected loan offer")
+    @Operation(summary = "Select loan offer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok"),
             @ApiResponse(responseCode = "400", description = "Invalid LoanOfferDTO")})
-    @PutMapping("/offer")
+    @PutMapping("/application/offer")
     public ResponseEntity<Void> selectLoanOffer(@RequestBody LoanOfferDTO offer) {
         log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         applicationService.selectLoanOffer(offer);
