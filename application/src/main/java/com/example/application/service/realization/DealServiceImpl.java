@@ -21,7 +21,7 @@ public class DealServiceImpl implements com.example.application.service.abstract
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         try {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter()) // Регистрируем адаптер для LocalDate
+                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapterService()) // Регистрируем адаптер для LocalDate
                     .create();
             DealServiceClient client = Feign.builder()
                     .encoder(new GsonEncoder(gson))
@@ -39,7 +39,7 @@ public class DealServiceImpl implements com.example.application.service.abstract
         log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         try {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapterService())
                     .create();
             DealServiceClient client = Feign.builder()
                     .encoder(new GsonEncoder(gson))
