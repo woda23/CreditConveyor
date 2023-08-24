@@ -8,4 +8,5 @@ import java.util.List;
 public interface DealService {
     List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO);
     void selectLoanOffer(LoanOfferDTO offer);
+    DealServiceClient configureFeign();
 }

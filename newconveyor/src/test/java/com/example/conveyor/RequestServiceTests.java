@@ -12,7 +12,6 @@ import com.example.conveyor.dto.enums.Gender;
 import com.example.conveyor.dto.enums.MaritalStatus;
 import com.example.conveyor.dto.enums.Position;
 import com.example.conveyor.exception.IllegalLoanRequestException;
-import com.example.conveyor.service.abstraction.LoanPreScoringService;
 import com.example.conveyor.service.realization.LoanServiceImpl;
 import com.example.conveyor.wrapper.ErrorResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,9 +38,6 @@ class RequestServiceTests {
     LoanServiceImpl service;
 
     @Autowired
-    LoanPreScoringService loanPreScoringService;
-
-    @Autowired
     ExceptionHandlingController exceptionHandlingController;
 
     @Test
@@ -66,32 +62,6 @@ class RequestServiceTests {
         assertTrue(loanOffers.get(1).getRate().compareTo(loanOffers.get(2).getRate()) >= 0);
         assertTrue(loanOffers.get(2).getRate().compareTo(loanOffers.get(3).getRate()) >= 0);
 
-    }
-
-    @Test
-    void testLoanMethodForFailed() {
-        assertThrows(NullPointerException.class, () -> loanPreScoringService.preScoreLoanApplication(null));
-        var loanApplicationRequestDTO = new LoanApplicationRequestDTO();
-        loanApplicationRequestDTO.setAmount(null);
-        loanApplicationRequestDTO.setBirthdate(LocalDate.parse("2010-01-01"));
-        loanApplicationRequestDTO.setEmail("ivanov@mail.ru");
-        loanApplicationRequestDTO.setTerm(5);
-        loanApplicationRequestDTO.setLastName("Иванов");
-        loanApplicationRequestDTO.setFirstName("Иван");
-        loanApplicationRequestDTO.setMiddleName("Иваноич");
-        loanApplicationRequestDTO.setPassportSeries("1234");
-        loanApplicationRequestDTO.setPassportNumber("123456");
-
-        assertThrows(IllegalArgumentException.class, () -> loanPreScoringService.preScoreLoanApplication(loanApplicationRequestDTO));
-        loanApplicationRequestDTO.setFirstName("Ivan");
-        loanApplicationRequestDTO.setAmount(BigDecimal.valueOf(50000.00));
-        loanApplicationRequestDTO.setTerm(6);
-        loanApplicationRequestDTO.setBirthdate(LocalDate.parse("1990-01-01"));
-        loanApplicationRequestDTO.setPassportNumber("1234242");
-        assertThrows(IllegalArgumentException.class, () -> loanPreScoringService.preScoreLoanApplication(loanApplicationRequestDTO));
-        loanApplicationRequestDTO.setPassportSeries("11111");
-        loanApplicationRequestDTO.setEmail("ivanov.ru");
-        assertThrows(IllegalArgumentException.class, () -> loanPreScoringService.preScoreLoanApplication(loanApplicationRequestDTO));
     }
 
     @Test

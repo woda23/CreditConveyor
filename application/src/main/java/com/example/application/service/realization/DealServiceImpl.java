@@ -20,13 +20,7 @@ public class DealServiceImpl implements com.example.application.service.abstract
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
         try {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapterService()) // Регистрируем адаптер для LocalDate
-                    .create();
-            DealServiceClient client = Feign.builder()
-                    .encoder(new GsonEncoder(gson))
-                    .decoder(new GsonDecoder(gson))
-                    .target(DealServiceClient.class, "http://localhost:8090");
+            DealServiceClient client = configureFeign();
             List<LoanOfferDTO> response = client.sendLoanApplication(loanApplicationRequestDTO);
             log.info("getLoanOffers(), List<LoanOfferDTO>: {}", response);
             return response;
@@ -38,17 +32,22 @@ public class DealServiceImpl implements com.example.application.service.abstract
     public void selectLoanOffer(LoanOfferDTO offer) {
         log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         try {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapterService())
-                    .create();
-            DealServiceClient client = Feign.builder()
-                    .encoder(new GsonEncoder(gson))
-                    .decoder(new GsonDecoder(gson))
-                    .target(DealServiceClient.class, "http://localhost:8090");
+            DealServiceClient client = configureFeign();
             client.sendLoanOffer(offer);
             log.info("selectLoanOffer(), request has been sent: {}", offer);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
+    }
+
+    public DealServiceClient configureFeign() {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapterService()) // Регистрируем адаптер для LocalDate
+                .create();
+        DealServiceClient client = Feign.builder()
+                .encoder(new GsonEncoder(gson))
+                .decoder(new GsonDecoder(gson))
+                .target(DealServiceClient.class, "http://localhost:8090");
+        return client;
     }
 }
