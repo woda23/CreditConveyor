@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
-@FeignClient(name = "deal-service-client", url = "http://localhost:8090")
+@FeignClient(name = "deal-service-client", url = "${deal.host.url}")
 public interface DealServiceClient {
     @PostMapping("${deal.url.application}")
     List<LoanOfferDTO> sendLoanApplication(LoanApplicationRequestDTO request);
