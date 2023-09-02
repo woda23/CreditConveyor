@@ -5,6 +5,7 @@ import com.example.application.controller.ExceptionHandlingController;
 import com.example.application.dto.ErrorResponse;
 import com.example.application.dto.LoanApplicationRequestDTO;
 import com.example.application.dto.LoanOfferDTO;
+import com.example.application.service.abstraction.DealServiceClient;
 import com.example.application.service.abstraction.LoanPreScoringService;
 import com.example.application.service.realization.DealServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -36,6 +37,9 @@ class ApplicationTests {
 
     @Autowired
     ExceptionHandlingController exceptionHandlingController;
+
+    @Autowired
+    DealServiceClient dealServiceClient;
     @Test
     public void checkCorrectGetLoanOffers() {
         LoanApplicationRequestDTO request = getLoanApplicationRequestDTO();
@@ -57,7 +61,6 @@ class ApplicationTests {
         DealServiceImpl dealService = Mockito.mock(DealServiceImpl.class);
         when(dealService.getLoanOffers(request)).thenReturn(response);
         List<LoanOfferDTO> loanOffers = dealService.getLoanOffers(request);
-        var feign = dealServiceImpl.configureFeign();
         Assertions.assertEquals(loanOffers.size(), 4);
         LoanOfferDTO loanOfferDTO = loanOffers.get(0);
         Assertions.assertEquals(loanOfferDTO.getApplicationId(), 1L);
@@ -68,7 +71,7 @@ class ApplicationTests {
         Assertions.assertEquals(loanOfferDTO.getRate(), BigDecimal.valueOf(23));
         Assertions.assertEquals(loanOfferDTO.getIsInsuranceEnabled(), false);
         Assertions.assertEquals(loanOfferDTO.getIsSalaryClient(), false);
-        Assertions.assertNotNull(feign);
+        Assertions.assertNotNull(dealServiceClient);
 
         try {
             applicationController.calculateLoanOffers(request);
