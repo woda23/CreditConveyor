@@ -1,8 +1,7 @@
-package com.example.conveyor.service.realization;
+package com.example.application.service.realization;
 
-import com.example.conveyor.dto.LoanApplicationRequestDTO;
-import com.example.conveyor.exception.IllegalLoanRequestException;
-import com.example.conveyor.service.abstraction.LoanPreScoringService;
+import com.example.application.dto.LoanApplicationRequestDTO;
+import com.example.application.service.abstraction.LoanPreScoringService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class LoanPreScoringServiceImpl implements LoanPreScoringService {
      * Проверяет заявку на кредит на соответствие правилам прескоринга.
      *
      * @param loanApplicationRequestDTO заявка на кредит
-     * @throws IllegalLoanRequestException если хотя бы одно поле не соответствует правилам прескоринга
+     * @throws IllegalArgumentException если хотя бы одно поле не соответствует правилам прескоринга
      */
     @Override
     public void preScoreLoanApplication(LoanApplicationRequestDTO loanApplicationRequestDTO) {
