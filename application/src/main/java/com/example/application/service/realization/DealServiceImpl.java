@@ -3,18 +3,12 @@ package com.example.application.service.realization;
 import com.example.application.dto.LoanApplicationRequestDTO;
 import com.example.application.dto.LoanOfferDTO;
 import com.example.application.service.abstraction.DealService;
-import com.example.application.service.abstraction.DealServiceClient;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import feign.Feign;
-import feign.gson.GsonDecoder;
-import feign.gson.GsonEncoder;
+import com.example.application.feign.DealServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service

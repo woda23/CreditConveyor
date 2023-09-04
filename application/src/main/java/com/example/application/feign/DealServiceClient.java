@@ -1,4 +1,4 @@
-package com.example.application.service.abstraction;
+package com.example.application.feign;
 
 import com.example.application.dto.LoanApplicationRequestDTO;
 import com.example.application.dto.LoanOfferDTO;

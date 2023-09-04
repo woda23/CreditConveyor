@@ -5,7 +5,7 @@ import com.example.application.controller.ExceptionHandlingController;
 import com.example.application.dto.ErrorResponse;
 import com.example.application.dto.LoanApplicationRequestDTO;
 import com.example.application.dto.LoanOfferDTO;
-import com.example.application.service.abstraction.DealServiceClient;
+import com.example.application.feign.DealServiceClient;
 import com.example.application.service.abstraction.LoanPreScoringService;
 import com.example.application.service.realization.DealServiceImpl;
 import org.junit.jupiter.api.Assertions;
