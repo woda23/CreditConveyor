@@ -28,6 +28,28 @@ public class DealController {
 
     private final DealServiceImpl dealServiceImpl;
 
+    @Operation(summary = "Send documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Send documents successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid send documents")})
+    @PostMapping("/document/{applicationId}/send")
+    public ResponseEntity<String> sendDocuments(@PathVariable Long applicationId) {
+        log.info("sendOffer(), Integer: {}", applicationId);
+        dealServiceImpl.sentMessage("send-documents", applicationId);
+        return ResponseEntity.ok("Offer sent successfully");
+    }
+
+    @Operation(summary = "sign  documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Send documents successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid send documents")})
+    @PostMapping("/document/{applicationId}/sign ")
+    public ResponseEntity<String> signDocuments(@PathVariable Long applicationId) {
+        log.info("signOffer(), Integer: {}", applicationId);
+        dealServiceImpl.sentMessage("sign-documents", applicationId);
+        return ResponseEntity.ok("Offer sent successfully");
+    }
+
     @Operation(summary = "Get loan offers",
             description = "Calculates possible loan offers based on the data of the loan application")
     @ApiResponses(value = {
