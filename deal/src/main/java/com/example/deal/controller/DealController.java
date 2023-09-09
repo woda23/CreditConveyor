@@ -35,19 +35,30 @@ public class DealController {
     @PostMapping("/document/{applicationId}/send")
     public ResponseEntity<String> sendDocuments(@PathVariable Long applicationId) {
         log.info("sendOffer(), Integer: {}", applicationId);
-        dealServiceImpl.sentMessage("send-documents", applicationId);
+        dealServiceImpl.sentMessage("create-documents", applicationId);
         return ResponseEntity.ok("Offer sent successfully");
     }
 
-    @Operation(summary = "sign  documents")
+    @Operation(summary = "Request for sign documents")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Send documents successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid send documents")})
+            @ApiResponse(responseCode = "200", description = "Request for sign documents successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid sign documents")})
     @PostMapping("/document/{applicationId}/sign ")
+    public ResponseEntity<String> requestedSignDocuments(@PathVariable Long applicationId) {
+        log.info("signOffer(), Integer: {}", applicationId);
+        dealServiceImpl.sentMessage("send-documents", applicationId);
+        return ResponseEntity.ok("Requested sign successfully");
+    }
+
+    @Operation(summary = "Sign documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sign documents successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid sign documents")})
+    @PostMapping("/document/{applicationId}/code  ")
     public ResponseEntity<String> signDocuments(@PathVariable Long applicationId) {
         log.info("signOffer(), Integer: {}", applicationId);
-        dealServiceImpl.sentMessage("sign-documents", applicationId);
-        return ResponseEntity.ok("Offer sent successfully");
+        dealServiceImpl.sentMessage("send-ses", applicationId);
+        return ResponseEntity.ok("Offer sign successfully");
     }
 
     @Operation(summary = "Get loan offers",
@@ -72,6 +83,7 @@ public class DealController {
     public ResponseEntity<Void> selectLoanOffer(@RequestBody LoanOfferDTO offer) {
         log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         dealServiceImpl.selectLoanOffer(offer);
+        dealServiceImpl.sentMessage("credit-issued", offer.getApplicationId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

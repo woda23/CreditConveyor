@@ -77,6 +77,7 @@ public class DealServiceImpl implements DealService {
         }
         producer.sendMessage(emailMessage, topic);
     }
+
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request) {
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", request);
         Client client = createClient(request);
