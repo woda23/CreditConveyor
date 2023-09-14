@@ -1,12 +1,15 @@
 package com.example.deal.service.realization;
 
+import com.example.deal.config.Producer;
 import com.example.deal.dto.CreditDTO;
+import com.example.deal.dto.EmailMessage;
 import com.example.deal.dto.FinishRegistrationRequestDTO;
 import com.example.deal.dto.LoanApplicationRequestDTO;
 import com.example.deal.dto.LoanOfferDTO;
 import com.example.deal.dto.ScoringDataDTO;
 import com.example.deal.dto.enums.ApplicationStatus;
 import com.example.deal.dto.enums.ChangeType;
+import com.example.deal.dto.enums.EmailMessageTheme;
 import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
 import com.example.deal.entity.Credit;
@@ -56,6 +59,24 @@ public class DealServiceImpl implements DealService {
     private final PassportMapper passportMapper;
     private final ScoringDTOMapper scoringDTOMapper;
     private final EmploymentMapper employmentMapper;
+    private final Producer producer;
+
+    public void sentMessage(String topic, Long applicationId) {
+        var address = getApplicationById(applicationId).getClient().getEmail();
+        var emailMessage = EmailMessage.builder()
+                .address(address)
+                .applicationId(applicationId)
+                .build();
+        switch (topic) {
+            case "finish-registration" -> emailMessage.setTheme(EmailMessageTheme.FINISH_REGISTRATION);
+            case "create-documents" -> emailMessage.setTheme(EmailMessageTheme.CREATE_DOCUMENTS);
+            case "send-documents" -> emailMessage.setTheme(EmailMessageTheme.SEND_DOCUMENTS);
+            case "send-ses" -> emailMessage.setTheme(EmailMessageTheme.SEND_SES);
+            case "credit-issued" -> emailMessage.setTheme(EmailMessageTheme.CREDIT_ISSUED);
+            case "application-denied" -> emailMessage.setTheme(EmailMessageTheme.APPLICATION_DENIED);
+        }
+        producer.sendMessage(emailMessage, topic);
+    }
 
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request) {
         log.info("getLoanOffers(), LoanApplicationRequestDTO: {}", request);
