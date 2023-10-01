@@ -1,6 +1,7 @@
 package com.example.deal.config;
 
 import com.example.deal.dto.EmailMessage;
+import com.example.deal.dto.EmailMessageWithDocuments;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,23 @@ public class Producer {
         try {
             String orderAsMessage = objectMapper.writeValueAsString(message);
             kafkaTemplate.send(topic, orderAsMessage);
-
-            log.info("food order produced {}", orderAsMessage);
             return "message sent";
         }
         catch (Exception e) {
              log.info(e.getMessage());
              throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    public String sendDocuments(EmailMessageWithDocuments message, String topic) {
+        try {
+            String orderAsMessage = objectMapper.writeValueAsString(message);
+            kafkaTemplate.send(topic, orderAsMessage);
+            return "documents sent";
+        }
+        catch (Exception e) {
+            log.info(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }

@@ -35,7 +35,8 @@ public class DealController {
     @PostMapping("/document/{applicationId}/send")
     public ResponseEntity<String> sendDocuments(@PathVariable Long applicationId) {
         log.info("sendOffer(), Integer: {}", applicationId);
-        dealServiceImpl.sentMessage("create-documents", applicationId);
+        dealServiceImpl.sentDocuments("send-documents", applicationId,
+                dealServiceImpl.getApplicationById(applicationId).getCredit());
         return ResponseEntity.ok("Offer sent successfully");
     }
 
@@ -83,7 +84,7 @@ public class DealController {
     public ResponseEntity<Void> selectLoanOffer(@RequestBody LoanOfferDTO offer) {
         log.info("selectLoanOffer(), LoanOfferDTO: {}", offer);
         dealServiceImpl.selectLoanOffer(offer);
-        dealServiceImpl.sentMessage("credit-issued", offer.getApplicationId());
+        dealServiceImpl.sentMessage("finish-registration", offer.getApplicationId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

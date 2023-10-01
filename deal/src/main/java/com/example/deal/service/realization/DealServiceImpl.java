@@ -3,6 +3,7 @@ package com.example.deal.service.realization;
 import com.example.deal.config.Producer;
 import com.example.deal.dto.CreditDTO;
 import com.example.deal.dto.EmailMessage;
+import com.example.deal.dto.EmailMessageWithDocuments;
 import com.example.deal.dto.FinishRegistrationRequestDTO;
 import com.example.deal.dto.LoanApplicationRequestDTO;
 import com.example.deal.dto.LoanOfferDTO;
@@ -70,12 +71,22 @@ public class DealServiceImpl implements DealService {
         switch (topic) {
             case "finish-registration" -> emailMessage.setTheme(EmailMessageTheme.FINISH_REGISTRATION);
             case "create-documents" -> emailMessage.setTheme(EmailMessageTheme.CREATE_DOCUMENTS);
-            case "send-documents" -> emailMessage.setTheme(EmailMessageTheme.SEND_DOCUMENTS);
             case "send-ses" -> emailMessage.setTheme(EmailMessageTheme.SEND_SES);
             case "credit-issued" -> emailMessage.setTheme(EmailMessageTheme.CREDIT_ISSUED);
             case "application-denied" -> emailMessage.setTheme(EmailMessageTheme.APPLICATION_DENIED);
         }
         producer.sendMessage(emailMessage, topic);
+    }
+
+    public void sentDocuments(String topic, Long applicationId, Credit credit) {
+        var address = getApplicationById(applicationId).getClient().getEmail();
+        var emailMessage = EmailMessageWithDocuments.builder()
+                .address(address)
+                .applicationId(applicationId)
+                .theme(EmailMessageTheme.SEND_DOCUMENTS)
+                .credit(new Gson().toJson(credit))
+                .build();
+        producer.sendDocuments(emailMessage, topic);
     }
 
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request) {
